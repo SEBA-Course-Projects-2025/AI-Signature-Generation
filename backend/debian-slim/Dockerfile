@@ -9,19 +9,11 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-#RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1 \
-#    && python -m pip install --upgrade pip --break-system-packages
-
-RUN pip install --break-system-packages \
-    numpy \
-    uvicorn \
-    torch \
-    fastapi
-    # coming soon
-
 WORKDIR /app
 
 COPY ./backend/app/ /app/
+
+RUN pip install --break-system-packages -r requirements.txt
 
 EXPOSE 8000
 
