@@ -1,16 +1,16 @@
 FROM debian:stable-slim
 
 RUN apt-get update && apt-get install -y \
-    python3.11 \
-    python3.11-venv \
-    python3.11-dev \
+    python3 \
+    python3-venv \
+    python3-dev \
     python3-pip \
     sqlite3 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 \
-    && python -m pip install --upgrade pip --break-system-packages
+#RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1 \
+#    && python -m pip install --upgrade pip --break-system-packages
 
 RUN pip install --break-system-packages \
     numpy \
@@ -21,7 +21,7 @@ RUN pip install --break-system-packages \
 
 WORKDIR /app
 
-COPY ./backend/app/main.py /app
+COPY ./backend/app/ /app/
 
 EXPOSE 8000
 
