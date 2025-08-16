@@ -2,12 +2,12 @@ from fastapi import FastAPI
 from fastapi import HTTPException
 from fastapi.responses import FileResponse
 from fastapi.responses import HTMLResponse
+from pathlib import Path
 from pydantic import BaseModel
 # import signature generator
 
 app = FastAPI(
     title="Signature generator API",
-    version="1.0",
 )
 
 class Generate_request(BaseModel):
@@ -20,27 +20,21 @@ def read_root():
         return f.read()
 
 
-@app.post("/generate")
-async def generate(request: Generate_request):
-    try:
-        signature_image = 0 # function_call(request.text)
-        return {"signature_image": signature_image}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.get("/version")
-async def version():
-    return {
-        "API": app.version,
-        "version": "Signature-model-v1.1"
-    }
-
-
-class TriggerRequest(BaseModel):
+class Generate_request(BaseModel):
     text: str
 
-@app.post("/trigger")
-def trigger_endpoint(request: TriggerRequest):
-    filename = "test_image/image1.png"
-    return FileResponse(filename, media_type="image/png")
+
+@app.post("/generate")
+async def generate(request: Generate_request):
+    if request.text == "":
+        raise HTTPException(status_code=400, detail="Text input is empty")
+
+    file_path = Path(__file__).resolve().parent / "test_image" / "image1.png"
+    if not file_path.is_file():
+        raise HTTPException(status_code=404, detail=f"Image not found: {file_path}")
+
+    try:
+        # signature_image = function_call(request.text)
+        return FileResponse(file_path, media_type="image/png")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

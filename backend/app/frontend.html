@@ -10,17 +10,17 @@
 <body>
     <h2>Generate Signature</h2>
     <input type="text" id="textInput" placeholder="Enter name, for example Sophy">
-    <button onclick="triggerGenerate()">Generate</button>
+    <button onclick="generateGenerate()">Generate</button>
     <pre id="responseBox"></pre>
     <img id="preview" alt="Result will appear here" style="max-width: 100%; display:none" />
 
 <script>
   let currentObjectUrl = null;
 
-  async function triggerGenerate() {
+  async function generateGenerate() {
     const text = document.getElementById('textInput').value;
 
-    const response = await fetch('/trigger', {
+    const response = await fetch('/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text })
