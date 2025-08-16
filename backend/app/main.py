@@ -6,6 +6,7 @@ from pathlib import Path
 from pydantic import BaseModel
 # import signature generator
 
+
 app = FastAPI(
     title="Signature generator API",
 )
@@ -20,13 +21,9 @@ def read_root():
         return f.read()
 
 
-class Generate_request(BaseModel):
-    text: str
-
-
 @app.post("/generate")
 async def generate(request: Generate_request):
-    if request.text == "":
+    if request.text.strip() == "":
         raise HTTPException(status_code=400, detail="Text input is empty")
 
     file_path = Path(__file__).resolve().parent / "test_image" / "image1.png"
