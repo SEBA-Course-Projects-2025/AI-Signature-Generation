@@ -4,12 +4,29 @@ from fastapi.responses import FileResponse
 from fastapi.responses import HTMLResponse
 from pathlib import Path
 from pydantic import BaseModel
+import logging
+from logging_config import setup_logging
+from prometheus_fastapi_instrumentator import Instrumentator
 # import signature generator
 
+setup_logging()
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="Signature generator API",
 )
+
+
+@app.on_event("startup")
+async def startup():
+    Instrumentator().instrument(app).expose(app)
+
+
+@app.get("/health")
+def health_check():
+    logger.info("Health check")
+    return {"status": "ok"}
+
 
 class Generate_request(BaseModel):
     text: str
