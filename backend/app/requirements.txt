@@ -2,3 +2,4 @@ fastapi
 numpy
 uvicorn
 prometheus-fastapi-instrumentator
+requests

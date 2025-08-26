@@ -4,6 +4,9 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-venv \
     python3-dev \
+    python3-tk \
+    python3-pil \
+    python3-pil.imagetk \
     python3-pip \
     sqlite3 \
     && apt-get clean \
@@ -12,6 +15,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 COPY ./backend/app/ /app/
+RUN mkdir /app/logs
 
 RUN pip install --break-system-packages -r requirements.txt
 
