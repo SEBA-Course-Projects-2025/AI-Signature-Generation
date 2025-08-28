@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi import HTTPException
 from fastapi.responses import FileResponse
 from fastapi.responses import HTMLResponse
-from pathlib import Path
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import logging
 from logging_config import setup_logging
@@ -44,7 +44,7 @@ async def generate(request: Generate_request):
     if request.text.strip() == "":
         raise HTTPException(status_code=400, detail="Text input is empty")
 
-    url = "https://90ab3535f32f.ngrok-free.app/generate"
+    url = "https://4505b967ed26.ngrok-free.app/generate"
     payload = {
         "name": request.text.strip()
     }
@@ -54,11 +54,15 @@ async def generate(request: Generate_request):
         raise HTTPException(status_code=res.status_code, detail=res.text)
 
     data = res.json()
-    img_base64 = data["img_base64"]
+    img_base64 = data["image_base64"]
     image = Image.open(BytesIO(base64.b64decode(img_base64)))
 
     try:
         # signature_image = function_call(request.text)
-        return FileResponse(image, media_type="image/png")
+        buf = BytesIO()
+        image.save(buf, format="PNG")
+        buf.seek(0)
+
+        return StreamingResponse(buf, media_type="image/png")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
