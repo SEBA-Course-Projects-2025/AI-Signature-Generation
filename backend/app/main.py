@@ -39,6 +39,7 @@ def read_root():
         return f.read()
 
 
+
 @app.post("/generate")
 async def generate(request: Generate_request):
     if request.text.strip() == "":
